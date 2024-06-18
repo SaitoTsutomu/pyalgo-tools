@@ -1,0 +1,38 @@
+[tool.poetry]
+authors = ["Saito Tsutomu <tsutomu7@hotmail.co.jp>"]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python",
+  "Topic :: Software Development",
+  "Topic :: Scientific/Engineering",
+]
+description = "Algorithm of etc."
+homepage = "https://github.com/SaitoTsutomu/pyalgo-tools"
+license = "Apache-2.0"
+name = "pyalgo-tools"
+readme = "README.md"
+version = "0.0.1"
+
+[tool.poetry.dependencies]
+numpy = ">=1.26"
+python = ">=3.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2"
+ruff = "^0"
+
+[tool.pytest.ini_options]
+addopts = [
+  "--strict-markers", # マーカースペルミス対応
+  "--strict-config", # 設定ミス対応
+  "-ra", # サマリー表示
+  "-v", # 詳細表示
+  "-x", # 失敗時に終了
+  "--capture=no", # 標準出力表示
+]
+# testpaths = "tests"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
