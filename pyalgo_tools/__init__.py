@@ -1,5 +1,7 @@
 import math
 import urllib
+from collections.abc import Callable, Iterable
+from typing import Any
 
 import numpy as np
 
@@ -17,6 +19,37 @@ def dhondt(total: int, votes: np.ndarray | list[int]) -> np.ndarray:
         i = (votes_ / (seats + 1)).argmax()
         seats[i] += 1
     return seats
+
+
+def enum_sub(
+    iterable: Iterable[Any], target: int, func: Callable[..., int] | None = None
+) -> list[list[Any]]:
+    """指定した合計となる部分集合の列挙
+
+    :param iterable: 任意のオブジェクトのイテラブル
+    :param target: 指定した合計
+    :param func: オブジェクトを値に変換する関数, defaults to None
+    :return: 部分集合の列挙
+    """
+
+    def _sub(start, subset, subtotal):
+        if subtotal == target:
+            result.append(list(subset))
+            return
+        elif subtotal > target:
+            return
+        for i in range(start, len(vals)):
+            subset.append(objs[i])
+            _sub(i + 1, subset, subtotal + vals[i])
+            subset.pop()
+
+    result: list[list[Any]] = []
+    if func is None:
+        func = lambda x: x  # noqa
+    objs: list[Any] = list(iterable)
+    vals: list[int] = list(map(func, objs))
+    _sub(0, [], 0)
+    return result
 
 
 def circle_overlap_area(x1: float, y1, r1: float, x2: float, y2: float, r2: float) -> float:
@@ -52,4 +85,5 @@ def read_spreadsheets(id: str):
     url = f"https://docs.google.com/spreadsheets/d/{id}/export?format=csv"
     with urllib.request.urlopen(url) as fp:
         df = pd.read_csv(fp)
+    return df
     return df

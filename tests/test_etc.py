@@ -2,12 +2,17 @@ import math
 
 import pytest
 
-from pyalgo_tools import circle_overlap_area, dhondt
+from pyalgo_tools import circle_overlap_area, dhondt, enum_sub
 
 
 def test_dhondt():
     actual = dhondt(100, [45, 12, 34])
     assert (actual == [50, 13, 37]).all()
+
+
+def test_enum_sub():
+    ary = [2, 1, 4, 3, 2]
+    assert enum_sub(ary, 4) == [[2, 2], [1, 3], [4]]
 
 
 @pytest.mark.parametrize(
