@@ -1,5 +1,5 @@
 import math
-import urllib
+import urllib.request
 from collections.abc import Callable, Iterable
 from typing import Any
 
@@ -21,9 +21,7 @@ def dhondt(total: int, votes: np.ndarray | list[int]) -> np.ndarray:
     return seats
 
 
-def enum_sub(
-    iterable: Iterable[Any], target: int, func: Callable[..., int] | None = None
-) -> list[list[Any]]:
+def enum_sub(iterable: Iterable[Any], target: int, func: Callable[..., int] | None = None) -> list[list[Any]]:
     """指定した合計となる部分集合の列挙
 
     :param iterable: 任意のオブジェクトのイテラブル
@@ -74,15 +72,15 @@ def circle_overlap_area(x1: float, y1, r1: float, x2: float, y2: float, r2: floa
     return p1 + p2 - p3
 
 
-def read_spreadsheets(id: str):
+def read_spreadsheets(id_: str):
     """GoogleスプレッドシートからCSVの読込
 
-    :param id: URLのID（誰でも読取り可であること）
+    :param id_: URLのID(誰でも読取り可であること)
     :return: DataFrame
     """
     import pandas as pd
 
-    url = f"https://docs.google.com/spreadsheets/d/{id}/export?format=csv"
+    url = f"https://docs.google.com/spreadsheets/d/{id_}/export?format=csv"
     with urllib.request.urlopen(url) as fp:
         df = pd.read_csv(fp)
     return df
