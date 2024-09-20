@@ -34,7 +34,7 @@ def enum_sub(iterable: Iterable[Any], target: int, func: Callable[..., int] | No
         if subtotal == target:
             result.append(list(subset))
             return
-        elif subtotal > target:
+        if subtotal > target:
             return
         for i in range(start, len(vals)):
             subset.append(objs[i])
@@ -43,14 +43,14 @@ def enum_sub(iterable: Iterable[Any], target: int, func: Callable[..., int] | No
 
     result: list[list[Any]] = []
     if func is None:
-        func = lambda x: x  # noqa
+        func = lambda x: x  # noqa: E731
     objs: list[Any] = list(iterable)
     vals: list[int] = list(map(func, objs))
     _sub(0, [], 0)
     return result
 
 
-def circle_overlap_area(x1: float, y1, r1: float, x2: float, y2: float, r2: float) -> float:
+def circle_overlap_area(x1: float, y1, r1: float, x2: float, y2: float, r2: float) -> float:  # noqa: PLR0913 PLR0917
     """2つの円の重なる面積
 
     :param x1: 円1のX座標
@@ -64,7 +64,7 @@ def circle_overlap_area(x1: float, y1, r1: float, x2: float, y2: float, r2: floa
     d = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     if d >= r1 + r2:
         return 0.0
-    elif d <= abs(r1 - r2):
+    if d <= abs(r1 - r2):
         return math.pi * min(r1, r2) ** 2
     p1 = r1**2 * math.acos((d**2 + r1**2 - r2**2) / (2 * d * r1))
     p2 = r2**2 * math.acos((d**2 + r2**2 - r1**2) / (2 * d * r2))
@@ -78,7 +78,7 @@ def read_spreadsheets(id_: str):
     :param id_: URLのID(誰でも読取り可であること)
     :return: DataFrame
     """
-    import pandas as pd
+    import pandas as pd  # noqa: PLC0415
 
     url = f"https://docs.google.com/spreadsheets/d/{id_}/export?format=csv"
     with urllib.request.urlopen(url) as fp:
