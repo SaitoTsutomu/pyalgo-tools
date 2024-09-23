@@ -1,9 +1,14 @@
 import math
 import urllib.request
 from collections.abc import Callable, Iterable
+from importlib.metadata import metadata
 from typing import Any
 
 import numpy as np
+
+_package_metadata = metadata(__package__)
+__version__ = _package_metadata["Version"]
+__author__ = _package_metadata.get("Author-email", "")
 
 
 def dhondt(total: int, votes: np.ndarray | list[int]) -> np.ndarray:
