@@ -86,7 +86,7 @@ def read_spreadsheets(id_: str):
     import pandas as pd  # noqa: PLC0415
 
     url = f"https://docs.google.com/spreadsheets/d/{id_}/export?format=csv"
-    with urllib.request.urlopen(url) as fp:
+    with urllib.request.urlopen(url) as fp:  # noqa: S310
         df = pd.read_csv(fp)
     return df
     return df
