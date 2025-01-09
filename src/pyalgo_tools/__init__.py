@@ -4,7 +4,10 @@ from collections.abc import Callable, Iterable
 from importlib.metadata import metadata
 from typing import Any
 
+import networkx as nx
 import numpy as np
+import pandas as pd
+from scipy.spatial import Voronoi
 
 _package_metadata = metadata(__package__)
 __version__ = _package_metadata["Version"]
@@ -83,10 +86,28 @@ def read_spreadsheets(id_: str):
     :param id_: URLのID(誰でも読取り可であること)
     :return: DataFrame
     """
-    import pandas as pd  # noqa: PLC0415
-
     url = f"https://docs.google.com/spreadsheets/d/{id_}/export?format=csv"
     with urllib.request.urlopen(url) as fp:  # noqa: S310
         df = pd.read_csv(fp)
     return df
     return df
+
+
+def random_planar_graph(n: int, seed=None) -> tuple[nx.Graph, np.ndarray]:
+    """Create planar graphs.
+
+    :param n: The number of nodes.
+    :param seed: The seed of random.
+    :return: Graph and position's list.
+    """
+    rng = np.random.default_rng(seed)
+    points = rng.random((n, 2)).tolist()
+    tmp = nx.Graph()
+    tmp.add_nodes_from(range(len(points)))
+    # Spread the vertices slightly.
+    pos = nx.spring_layout(tmp, pos=dict(enumerate(points)), iterations=2, seed=seed)
+    vor = Voronoi(list(pos.values()))
+    g = nx.Graph()
+    # Add edges between the boundaries of the Voronoi.
+    g.add_edges_from(vor.ridge_points.tolist())
+    return g, vor.points

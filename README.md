@@ -36,3 +36,11 @@ print(round(circle_overlap_area(0, 2, 1, 0, 1, 2), 4))
 3.1416
 ```
 
+## Example 平面グラフ
+
+```python
+import networkx as nx
+
+g, pos = random_planar_graph(20, seed=1)
+nx.draw(g, pos=pos)
+```
