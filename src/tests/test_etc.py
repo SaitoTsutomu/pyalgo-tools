@@ -31,6 +31,7 @@ def test_circle_overlap_area(memo, x1, y1, r1, x2, y2, r2, expected):  # noqa: P
 
 
 def test_random_planar_graph(snapshot):
-    g, pos = random_planar_graph(20, seed=1)
+    g, pos, distance = random_planar_graph(20, seed=1)
     snapshot.assert_match(str(nx.to_dict_of_dicts(g)), "graph")
     snapshot.assert_match(str(pos), "pos")
+    snapshot.assert_match(str(distance), "distance")

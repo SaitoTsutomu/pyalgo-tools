@@ -7,7 +7,7 @@ from typing import Any
 import networkx as nx
 import numpy as np
 import pandas as pd
-from scipy.spatial import Voronoi
+from scipy.spatial import Voronoi, distance
 
 _package_metadata = metadata(__package__)
 __version__ = _package_metadata["Version"]
@@ -93,21 +93,30 @@ def read_spreadsheets(id_: str):
     return df
 
 
-def random_planar_graph(n: int, seed=None) -> tuple[nx.Graph, np.ndarray]:
+def random_planar_graph(n: int, seed=None, scale: float = 1000) -> tuple[nx.Graph, list[list[int]], list[list[int]]]:
     """Create planar graphs.
 
-    :param n: The number of nodes.
+    :param n: The number of nodes.( > 0)
     :param seed: The seed of random.
-    :return: Graph and position's list.
+    :param scale: The scale of position.
+    :return: Graph, position, distance
     """
+    if n < 1:
+        msg = "n must be greater than 0."
+        raise ValueError(msg)
     rng = np.random.default_rng(seed)
     points = rng.random((n, 2)).tolist()
     tmp = nx.Graph()
     tmp.add_nodes_from(range(len(points)))
     # Spread the vertices slightly.
-    pos = nx.spring_layout(tmp, pos=dict(enumerate(points)), iterations=2, seed=seed)
-    vor = Voronoi(list(pos.values()))
+    pos0 = nx.spring_layout(tmp, pos=dict(enumerate(points)), iterations=2, seed=seed)
+    vor = Voronoi(list(pos0.values()))
     g = nx.Graph()
     # Add edges between the boundaries of the Voronoi.
-    g.add_edges_from(vor.ridge_points.tolist())
-    return g, vor.points
+    g.add_edges_from(vor.ridge_points.astype(str).tolist())
+    pos = vor.points
+    pos -= pos.min(0)
+    pos /= pos.max(0)
+    pos = (pos * scale).astype(int).tolist()
+    dist = distance.cdist(pos, pos).astype(int).tolist()
+    return g, pos, dist
