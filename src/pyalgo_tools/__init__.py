@@ -113,7 +113,7 @@ def random_planar_graph(n: int, seed=None, scale: float = 1000) -> tuple[nx.Grap
     vor = Voronoi(list(pos0.values()))
     g = nx.Graph()
     # Add edges between the boundaries of the Voronoi.
-    g.add_edges_from(vor.ridge_points.astype(str).tolist())
+    g.add_edges_from(vor.ridge_points.tolist())
     pos = vor.points
     pos -= pos.min(0)
     pos /= pos.max(0)
